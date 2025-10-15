@@ -1,4 +1,5 @@
 from langgraph_backend import chatflow,config
+from langchain_core.messages import HumanMessage
 import streamlit as st
 
 message_history=[]
@@ -23,11 +24,18 @@ if user_input:
     with st.chat_message(name='user'):
         st.text(user_input)
 
-    ai_message=chatflow.invoke({'messages':user_input},config=config)['messages'][-1].content 
+   
 
-    st.session_state['message_history'].append({'role':'AI','content':ai_message})
+   
 
     # Displaying the AI Messages
     with st.chat_message(name='AI'):
-        st.text(ai_message)    
+        ai_message=st.write_stream(
+            message_chunk.content for message_chunk,metadata in chatflow.stream(
+                {'messages':[HumanMessage(content=user_input)]},
+                config=config,
+                stream_mode='messages'
+            )
+        ) 
+        st.session_state['message_history'].append({'role':'AI','content':ai_message})  
 
