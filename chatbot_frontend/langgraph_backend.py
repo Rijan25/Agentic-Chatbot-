@@ -47,7 +47,7 @@ chatflow
 
 # invoke the graph
 
-initial_state={'messages':'Who is the PM of India?'}
+initial_state={'messages':'What is the area of Nepal?'}
 output_state=chatflow.invoke(initial_state,config=config)
 print(output_state)
 
